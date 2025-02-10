@@ -1,0 +1,29 @@
+---
+description: Rules for AutoGen development
+globs: src/agents/specialized/autogen/*.py
+---
+
+# AutoGen Development Rules
+
+Follow these rules when working with AutoGen components:
+
+## Core Requirements
+- Use AutoGen >= 0.4.5
+- Implement proper configuration
+- Handle conversation errors
+- Monitor timeouts
+- Test thoroughly
+
+## Agent Structure
+- Use proper inheritance
+- Implement required methods
+- Handle message flow
+- Monitor conversations
+- Manage timeouts
+
+## Group Chat Management
+- Configure proper roles
+- Handle message routing
+- Implement error recovery
+- Monitor conversation flow
+- Manage state
