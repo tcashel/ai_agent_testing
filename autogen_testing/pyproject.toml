@@ -1,0 +1,30 @@
+[project]
+name = "autogen-testing"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Tripp Cashel",email = "tripp@wavesign.co"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+
+dependencies = [
+    "autogen-agentchat==0.4.5",
+    "autogen-ext[openai]==0.4.5",
+    "langchain>=0.3.18",
+    "langchain-community",
+    "langchain-openai>=0.3.4",
+    "psycopg2-binary",  # for PostgreSQL
+    "python-dotenv",
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[virtualenvs]
+in-project = true
+

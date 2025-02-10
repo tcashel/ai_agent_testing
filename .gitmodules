@@ -1,0 +1,3 @@
+[submodule "openlit"]
+	path = openlit
+	url = git@github.com:openlit/openlit.git

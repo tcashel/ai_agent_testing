@@ -1,0 +1,24 @@
+[project]
+name = "autogenstudio-env"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Tripp Cashel",email = "tripp@wavesign.co"}
+]
+readme = "README.md"
+
+requires-python = ">=3.12,<3.13"
+
+dependencies = [
+    "autogenstudio",
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[virtualenvs]
+in-project = true

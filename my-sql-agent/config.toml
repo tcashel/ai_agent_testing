@@ -1,0 +1,10 @@
+ [llm]
+default_provider = "openai"
+
+[llm.openai]
+model_name = "gpt-4-turbo-preview"
+temperature = 0.0
+
+[llm.ollama]
+model_name = "mistral"
+temperature = 0.0
