@@ -107,7 +107,7 @@ Key aspects:
 - Limitations:
   - Complex to translate Python code to Studio's JSON format
   - Some agent methods lack `dump_config` functionality
-  - Better suited for simpler agent configurations, not production ready
+  - Better suited for simpler agent configurations, not production-ready
   - Docs say it is for research and development, not production
   - able to use LangChain tools
 
@@ -115,24 +115,84 @@ Key aspects:
 
 ### OpenLit
 
-[OpenLit](https://docs.openlit.io/) provides excellent observability:
+[OpenLit](https://docs.openlit.io/) provides excellent observability for LLM-based applications:
 
-- Quick setup (approximately 2 lines of code)
+- **I use OpenLit in this repo** it helped me find redundant prompts to agents.
+- **Open Source**: Fully open-source observability platform with self-hosting capabilities.
+
+- **Quick Setup**: Minimal integration required, approximately 2 lines of code:
 
   ```python
   import openlit
   openlit.init(otlp_endpoint="http://127.0.0.1:4318")
   ```
 
-- Auto-instruments LangChain
-- Features:
-  - Useful agent step logging
-  - Local development with pre-built Docker container
-  - Cost tracking via [pricing JSON](https://github.com/openlit/openlit/blob/main/assets/pricing.json)
-  - Advanced tracing capabilities
-- Access the UI at `http://127.0.0.1:3000` (default credentials in docs)
+- **Auto-Instrumentation**: Seamlessly integrates with LangChain applications.
 
-TODO: Explore filtering and labeling for better step/agent identification
+- **Feature-Rich Observability**:
+
+  - Detailed agent step logging for improved debugging and insights.
+  - Local development support with a pre-built Docker container.
+  - Ability to add tracing to agent applications for enhanced tracking.
+  - Cost tracking via [pricing JSON](https://github.com/openlit/openlit/blob/main/assets/pricing.json).
+  - Advanced tracing capabilities with OpenTelemetry support.
+  - Prompt management with central storage and evaluation.
+  - Guardrails for security and prompt injection protection.
+  - Side-by-side LLM comparison with OpenGround.
+
+- **Cons**:
+
+  - **Self-Hosting Complexity**: Requires infrastructure setup and ongoing maintenance.
+  - **Limited Documentation**: Some features lack extensive documentation or examples.
+  - **Less Community Adoption**: Smaller ecosystem compared to proprietary alternatives.
+
+- **Access**: The UI is available at `http://127.0.0.1:3000` (default credentials in the documentation).
+
+TODO: Explore filtering and labeling for better step/agent identification.
+
+### LangSmith
+
+[LangSmith](https://smith.langchain.com/) provides an advanced observability, tracing, and evaluation platform tailored for LangChain applications:
+
+- **I have not used this** - I did not use this since it is a paid product.
+- **Hosted Solution**: Managed service by LangChain, with an option for enterprise self-hosting.
+
+- **Quick Setup**: Easy integration with LangChain applications:
+
+  ```python
+  from langsmith import Client
+  client = Client()
+  client.log_run(...)
+  ```
+
+- **Seamless LangChain Integration**:
+
+  - Native tracing and debugging support for chains, agents, and LLM calls.
+  - Automatic instrumentation with detailed execution traces.
+
+- **Comprehensive Evaluation & Testing**:
+
+  - Dataset management for benchmarking LLM performance.
+  - Annotation queues for human-in-the-loop evaluations.
+  - Custom evaluation metrics for fine-tuning application accuracy.
+
+- **Prompt Engineering Tools**:
+
+  - Prompt versioning and refinement.
+  - Collaboration features for shared insights and team workflows.
+
+- **Cost and Latency Tracking**:
+
+  - Built-in cost estimation and performance analytics.
+
+- **Cons**:
+
+  - **Not Open Source**: Fully managed service with limited self-hosting options.
+  - **Vendor Lock-In**: Heavily tied to the LangChain ecosystem, making it harder to integrate with non-LangChain tools.
+  - **Pricing Concerns**: Costs can scale quickly with large workloads.
+  - **Privacy Considerations**: Requires sending potentially sensitive data to LangChain’s servers.
+
+- **Access**: The UI is available at [smith.langchain.com](https://smith.langchain.com/), offering a centralized dashboard for trace analysis and evaluation.
 
 ## Other Tools I Like
 
