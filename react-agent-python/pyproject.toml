@@ -7,27 +7,45 @@ authors = [
 ]
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.9"
+requires-python = ">=3.9,<4.0"
 dependencies = [
-    "langgraph>=0.2.6",
-    "langchain-openai>=0.1.22",
-    "langchain-anthropic>=0.1.23",
+    "langgraph>=0.2.72",
+    "langchain-openai>=0.3.5",
+    "langchain-anthropic>=0.3.7",
     "langchain>=0.2.14",
-    "langchain-fireworks>=0.1.7",
+    "langchain-core>=0.3.35",
+    "langchain-fireworks>=0.2.7",
     "python-dotenv>=1.0.1",
-    "langchain-community>=0.2.17",
-    "tavily-python>=0.4.0",
-    "psycopg2-binary>=2.9.9",  # PostgreSQL adapter
-    "sqlalchemy>=2.0.0",       # SQL toolkit and ORM
+    "langchain-community>=0.3.17",
+    "tavily-python>=0.5.1",
+    "psycopg2-binary>=2.9.10",  # PostgreSQL adapter
+    "sqlalchemy>=2.0.38",       # SQL toolkit and ORM
+    "matplotlib>=3.9.4",
+    "pandas>=2.2.3",
+    "numpy>=1.26.4",
+    "seaborn>=0.13.0",
+    "langgraph-checkpoint-sqlite>=2.0.4",  # For LangGraph checkpointing
+    "langchain-experimental>=0.3.4",      # For experimental features
 ]
 
 
 [project.optional-dependencies]
-dev = ["mypy>=1.11.1", "ruff>=0.6.1"]
+dev = [
+    "pytest",
+    "black",
+    "mypy>=1.11.1",
+    "ruff>=0.6.1",
+]
 
 [build-system]
-requires = ["setuptools>=73.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+black = "*"
+mypy = ">=1.11.1"
+ruff = ">=0.9.6"
 
 [tool.setuptools]
 packages = ["langgraph.templates.react_agent", "react_agent"]

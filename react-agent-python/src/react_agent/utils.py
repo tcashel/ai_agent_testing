@@ -22,6 +22,16 @@ def load_chat_model(fully_specified_name: str) -> BaseChatModel:
 
     Args:
         fully_specified_name (str): String in the format 'provider/model'.
+            Example: 'anthropic/claude-3-sonnet-20240229' or 'openai/gpt-4-turbo-preview'
+
+    Returns:
+        BaseChatModel: Initialized chat model instance.
     """
     provider, model = fully_specified_name.split("/", maxsplit=1)
-    return init_chat_model(model, model_provider=provider)
+    return init_chat_model(
+        model,
+        model_provider=provider,
+        # Configure any additional model parameters here
+        streaming=True,  # Enable streaming for better UX
+        verbose=True,  # Enable verbose mode for debugging
+    )

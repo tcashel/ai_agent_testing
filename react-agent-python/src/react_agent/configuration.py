@@ -37,6 +37,27 @@ class Configuration:
         },
     )
 
+    code_execution_timeout: int = field(
+        default=30,
+        metadata={
+            "description": "Maximum time in seconds allowed for code execution."
+        },
+    )
+
+    max_code_length: int = field(
+        default=2000,
+        metadata={
+            "description": "Maximum length of code that can be generated/executed."
+        },
+    )
+
+    allowed_modules: list[str] = field(
+        default_factory=lambda: ["pandas", "numpy", "matplotlib", "seaborn"],
+        metadata={
+            "description": "List of Python modules that are allowed to be imported in generated code."
+        },
+    )
+
     @classmethod
     def from_runnable_config(
         cls, config: Optional[RunnableConfig] = None

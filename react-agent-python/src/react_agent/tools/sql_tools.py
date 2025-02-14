@@ -1,10 +1,41 @@
 """SQL database tools for the React Agent."""
 from typing import List, Dict, Any, Optional
-from langchain_community.utilities import SQLDatabase
-from langchain_community.agent_toolkits import SQLDatabaseToolkit
-from langchain_core.language_models import BaseLanguageModel
-from langchain_openai import ChatOpenAI
 import os
+from langchain_core.tools import BaseTool
+from langchain_core.language_models import BaseLanguageModel
+from langchain_community.utilities import SQLDatabase
+from langchain_community.tools.sql_database.tool import (
+    InfoSQLDatabaseTool,
+    ListSQLDatabaseTool,
+    QuerySQLCheckerTool,
+    QuerySQLDataBaseTool,
+)
+from react_agent.configuration import Configuration
+
+def get_sql_tools(config: Optional[Configuration] = None) -> List[BaseTool]:
+    """Get SQL database tools.
+    
+    Args:
+        config: Optional configuration instance. If None, uses default configuration.
+        
+    Returns:
+        List of SQL database tools for querying and schema inspection.
+    """
+    if config is None:
+        config = Configuration()
+        
+    # Initialize database connection
+    db = SQLDatabase.from_uri(config.database_uri)
+    
+    # Create SQL toolkit tools
+    tools = [
+        QuerySQLDataBaseTool(db=db),
+        InfoSQLDatabaseTool(db=db),
+        ListSQLDatabaseTool(db=db),
+        QuerySQLCheckerTool(db=db)
+    ]
+    
+    return tools
 
 def create_sql_tools(db: SQLDatabase, llm: Optional[BaseLanguageModel] = None) -> List[Dict[str, Any]]:
     """Create SQL tools for the agent.
