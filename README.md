@@ -4,7 +4,7 @@ A practical exploration of various AI agent frameworks and tools, focusing on ob
 
 ## Repository Organization
 
-This monorepo is organized into the following structure:
+This monorepo has been reorganized into a clean structure with frameworks in one directory and use cases in another. The organization is as follows:
 
 ```
 ai_agent_testing/
