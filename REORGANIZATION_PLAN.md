@@ -10,7 +10,8 @@ ai_agent_testing/
 ├── frameworks/              # Projects organized by AI framework
 │   ├── langchain/           # LangChain examples and projects
 │   ├── autogen/             # AutoGen examples and projects 
-│   └── react_agent/         # React Agent pattern implementations
+│   ├── react_agent/         # React Agent pattern implementations
+│   └── llamaindex/          # LlamaIndex examples and projects
 ├── use_cases/               # Projects organized by purpose
 │   ├── sql_agents/          # SQL and database interaction agents
 │   └── guard_agents/        # Prompt guarding and safety implementations
@@ -24,7 +25,7 @@ ai_agent_testing/
 
 1. Move `react-agent-python` to `frameworks/react_agent/react-agent-python`
 2. Move `autogen_testing` to `frameworks/autogen/autogen_testing`
-3. Move `llama-cookbook` to `frameworks/llama/llama-cookbook`
+3. Move `llama-cookbook` to `frameworks/llamaindex/llama-cookbook`
 
 ### Step 2: Use Cases Directory
 
