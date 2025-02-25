@@ -78,9 +78,19 @@ class MCPSQLAgent:
 
     def _create_tools(self) -> List[BaseTool]:
         """Create tools for the agent to use."""
-        # PostgreSQL query tool
+        # PostgreSQL query tool with read-only enforcement
         def query_postgres(query: str) -> str:
-            """Execute a SQL query against PostgreSQL and return the results."""
+            """Execute a read-only SQL query against PostgreSQL and return the results."""
+            # Enforce read-only by checking for dangerous commands
+            query = query.strip().lower()
+            dangerous_commands = ["insert", "update", "delete", "drop", "alter", "create", "truncate", "grant", "revoke"]
+            if any(cmd in query.lower() for cmd in dangerous_commands):
+                return "Error: Only SELECT queries are allowed for safety reasons."
+            
+            # Only allow queries that start with SELECT
+            if not query.startswith("select"):
+                return "Error: Only SELECT queries are allowed. Please rewrite your query."
+                
             try:
                 response = self.postgres_mcp.query(query)
                 df = pd.DataFrame(response['rows'], columns=response['columns'])
@@ -91,7 +101,7 @@ class MCPSQLAgent:
         postgres_tool = StructuredTool.from_function(
             func=query_postgres,
             name="query_postgres",
-            description="Execute SQL queries against PostgreSQL database with e-commerce data"
+            description="Execute read-only SQL queries against PostgreSQL database with e-commerce data (only SELECT queries allowed)"
         )
 
         # PostgreSQL schema info tool
@@ -120,9 +130,19 @@ class MCPSQLAgent:
             description="Get schema information for PostgreSQL database tables and columns"
         )
 
-        # Snowflake query tool
+        # Snowflake query tool with read-only enforcement
         def query_snowflake(query: str) -> str:
-            """Execute a SQL query against Snowflake and return the results."""
+            """Execute a read-only SQL query against Snowflake and return the results."""
+            # Enforce read-only by checking for dangerous commands
+            query = query.strip().lower()
+            dangerous_commands = ["insert", "update", "delete", "drop", "alter", "create", "truncate", "grant", "revoke"]
+            if any(cmd in query.lower() for cmd in dangerous_commands):
+                return "Error: Only SELECT queries are allowed for safety reasons."
+            
+            # Only allow queries that start with SELECT
+            if not query.startswith("select"):
+                return "Error: Only SELECT queries are allowed. Please rewrite your query."
+                
             try:
                 response = self.snowflake_mcp.query(query)
                 df = pd.DataFrame(response['rows'], columns=response['columns'])
@@ -133,13 +153,23 @@ class MCPSQLAgent:
         snowflake_tool = StructuredTool.from_function(
             func=query_snowflake,
             name="query_snowflake",
-            description="Execute SQL queries against Snowflake data warehouse"
+            description="Execute read-only SQL queries against Snowflake data warehouse (only SELECT queries allowed)"
         )
 
-        # Grafana metrics query tool
+        # Grafana metrics query tool with safety checks
         def query_grafana_metrics(datasource: str, query: str, start: str, end: str, step: int = 60) -> str:
-            """Query Grafana for metrics data."""
+            """Query Grafana for metrics data (read-only)."""
+            # Basic safety checks for the query
+            if ";" in query or "delete" in query.lower() or "write" in query.lower() or "create" in query.lower():
+                return "Error: The query contains potentially unsafe operations. Only read operations are allowed."
+                
             try:
+                # Limit step size to prevent excessive resource usage
+                if step < 10:
+                    step = 10  # Minimum step of 10 seconds
+                if step > 3600:
+                    step = 3600  # Maximum step of 1 hour
+                
                 response = self.grafana_mcp.query_metrics(
                     datasource=datasource, query=query, start=start, end=end, step=step
                 )
@@ -150,7 +180,7 @@ class MCPSQLAgent:
         grafana_metrics_tool = StructuredTool.from_function(
             func=query_grafana_metrics,
             name="query_grafana_metrics",
-            description="Query Grafana for metrics data using PromQL or Flux queries"
+            description="Query Grafana for metrics data using PromQL or Flux queries (read-only access)"
         )
 
         # Grafana dashboards list tool
@@ -179,11 +209,14 @@ class MCPSQLAgent:
 
     def _create_agent(self) -> AgentExecutor:
         """Create the LangChain agent."""
-        # Define prompt template
+        # Define prompt template with strong read-only emphasis
         prompt = ChatPromptTemplate.from_template("""
         You are an expert SQL and data analytics agent that can query multiple data sources 
         including PostgreSQL, Snowflake, and Grafana.
 
+        IMPORTANT: You can ONLY execute READ-ONLY operations on all data sources. Write operations are strictly prohibited.
+        Only use SELECT statements for SQL databases and read-only API calls for other data sources.
+        
         PostgreSQL contains e-commerce data with tables for users, products, orders, and order_items.
 
         Always first check the schema of the database before running queries to understand 
@@ -194,6 +227,9 @@ class MCPSQLAgent:
         For time-series data from Grafana, consider adding visualizations where appropriate.
 
         If you're unsure which data source to use, ask for clarification.
+
+        Remember: You are accessing production databases, so you must NEVER attempt to modify data in any way.
+        Only execute queries that read data, never write, update, or delete.
 
         User's question: {input}
         """)
