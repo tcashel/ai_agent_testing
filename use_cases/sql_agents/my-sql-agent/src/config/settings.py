@@ -6,12 +6,16 @@ import os
 from pathlib import Path
 from typing import Optional
 import tomli
-from dotenv import load_dotenv
+import sys
+
+# Import shared environment utilities
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../..')))
+from shared.utils.env import load_env
 
 from .llm_config import LLMConfig, LLMProvider
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from both root and local .env files
+load_env()
 
 # Get project root directory (where pyproject.toml or .git is)
 def find_project_root() -> Path:

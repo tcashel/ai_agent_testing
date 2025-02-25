@@ -6,7 +6,6 @@ import os
 import logging
 from typing import List, Dict, Any
 from typing_extensions import TypedDict
-from dotenv import load_dotenv
 from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain_openai import ChatOpenAI
@@ -16,6 +15,12 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.graph import StateGraph, END
 import openlit
 
+# Import shared environment utilities
+import sys
+import os.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
+from shared.utils.env import load_env
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -23,18 +28,17 @@ logger = logging.getLogger(__name__)
 # Disable LangSmith warnings
 os.environ["LANGCHAIN_TRACING_V2"] = "false"
 
+# Load environment variables from root and local .env files
+logger.info("Loading environment variables")
+load_env()
+
 # Initialize OpenLit with minimal configuration
 logger.info("Initializing OpenLit...")
 openlit.init(
-    otlp_endpoint="http://127.0.0.1:4318",
+    otlp_endpoint=os.getenv("OPENLIT_ENDPOINT", "http://127.0.0.1:4318"),
     application_name="sql-tutorial",
     trace_content=True  # Enable content tracing for debugging
 )
-
-# Load environment variables
-ENV_PATH = "/Users/tcashel/repositories/ai_agent_testing/my-sql-agent/.env"
-logger.info(f"Loading environment variables from: {os.path.abspath(ENV_PATH)}")
-load_dotenv(dotenv_path=ENV_PATH)
 
 @openlit.trace
 def create_db():

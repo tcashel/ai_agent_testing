@@ -61,9 +61,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Load environment variables
+# Import shared environment utilities
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../..')))
+from shared.utils.env import load_env
+
+# Load environment variables from both root and local .env files
 logger.info("Loading environment variables")
-dotenv.load_dotenv(dotenv.find_dotenv())
+load_env()
 
 async def example():
     try:

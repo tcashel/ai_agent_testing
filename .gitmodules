@@ -1,3 +1,6 @@
 [submodule "openlit"]
 	path = openlit
 	url = git@github.com:openlit/openlit.git
+[submodule "frameworks/llamaindex/llama-cookbook"]
+	path = frameworks/llamaindex/llama-cookbook
+	url = git@github.com:meta-llama/llama-cookbook.git

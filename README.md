@@ -1,21 +1,74 @@
-# AI Agent Testing
+# AI Agent Testing Monorepo
 
-A practical exploration of various AI agent frameworks and tools, focusing on observability, development patterns, and real-world implementation. This repository contains examples and learnings from building AI agents with different frameworks, with a particular focus on SQL query generation and database interaction.
+A practical exploration of various AI agent frameworks and tools, focusing on observability, development patterns, and real-world implementation. This monorepo contains examples and learnings from building AI agents with different frameworks, with a particular focus on SQL query generation and database interaction.
+
+## Repository Organization
+
+This monorepo is organized into the following structure:
+
+```
+ai_agent_testing/
+├── .env                     # Centralized environment variables
+├── frameworks/              # Projects organized by AI framework
+│   ├── langchain/           # LangChain examples and projects
+│   ├── autogen/             # AutoGen examples and projects 
+│   └── react_agent/         # React Agent pattern implementations
+├── use_cases/               # Projects organized by purpose
+│   ├── sql_agents/          # SQL and database interaction agents
+│   └── guard_agents/        # Prompt guarding and safety implementations
+├── openlit/                 # OpenLit submodule (for observability)
+└── shared/                  # Common utilities and components
+```
+
+Each project maintains its own Poetry environment for dependency isolation.
+
+## Working with this Repository
+
+### Environment Setup
+
+1. **Repository-wide Environment Variables**
+   - A central `.env` file in the root holds common API keys and settings
+   - Project-specific variables are in individual project directories
+
+2. **Python Environment Management**
+   - Each project uses Poetry for environment management
+   - Install Poetry dependencies per project:
+     ```bash
+     cd frameworks/langchain/project_name
+     poetry install
+     ```
+
+3. **Observability**
+   - OpenLit is available for observability throughout the repo:
+     ```bash
+     docker compose -f openlit/docker-compose.yml up -d
+     ```
+
+## Featured Projects
+
+### SQL Agents
+- **use_cases/sql_agents/my-sql-agent**: Advanced SQL query generation and database interaction
+- **use_cases/sql_agents/langchain_sql_tutorial**: Basic SQL generation example with LangChain
+
+### Framework Examples
+- **frameworks/react_agent/react-agent-python**: Implementation of the React agent pattern with LangGraph
+- **frameworks/autogen/autogen_testing**: Examples using the AutoGen framework
+- **frameworks/llamaindex/llama-cookbook**: Collection of examples and tutorials for LLama models
 
 ## Table of Contents
 
-- [AI Agent Testing](#ai-agent-testing)
-  - [Table of Contents](#table-of-contents)
-  - [Quick Start](#quick-start)
+- [AI Agent Testing Monorepo](#ai-agent-testing-monorepo)
+  - [Repository Organization](#repository-organization)
+  - [Working with this Repository](#working-with-this-repository)
+    - [Environment Setup](#environment-setup)
+  - [Featured Projects](#featured-projects)
   - [Observability](#observability)
     - [State Management Lessons](#state-management-lessons)
-  - [LangChain](#langchain)
-    - [LangGraph Studio UI](#langgraph-studio-ui)
-  - [AutoGen](#autogen)
-    - [AutoGen Studio UI](#autogen-studio-ui)
-  - [Tools Evaluated](#tools-evaluated)
+  - [Frameworks Used](#frameworks-used)
+    - [LangChain](#langchain)
+    - [AutoGen](#autogen)
+  - [Tools Used](#tools-used)
     - [OpenLit](#openlit)
-  - [Other Tools I Like](#other-tools-i-like)
     - [Poetry](#poetry)
   - [Other Notable Tools](#other-notable-tools)
     - [Agent Frameworks](#agent-frameworks)
@@ -36,16 +89,24 @@ A practical exploration of various AI agent frameworks and tools, focusing on ob
 
 ```bash
 # Clone the repository
-git clone https://github.com/tashel/ai_agent_testing.git
+git clone https://github.com/tcashel/ai_agent_testing.git
 
-# Set up environment
-conda env create -f environment.yml
+# Set up central environment file
+cp .env.example .env
+# Edit .env with your API keys
 
 # Install OpenLit for observability
 docker compose -f openlit/docker-compose.yml up -d
 
-# Run example SQL agent
-python langchain_sql_tutorial/sql_tutorial.py
+# Work with a specific project (SQL Agent)
+cd use_cases/sql_agents/my-sql-agent
+poetry install
+poetry run python src/agent/sql_agent.py
+
+# Or try the React agent
+cd frameworks/react_agent/react-agent-python
+poetry install
+make dev
 ```
 
 ## Observability
@@ -64,7 +125,9 @@ Key findings:
 - Good: Maintaining contextual state and sending only necessary information
 - Impact: Significant reduction in API costs and improved performance
 
-## LangChain
+## Frameworks Used
+
+### LangChain
 
 [LangChain](https://python.langchain.com/docs/get_started/introduction) provides powerful tools for custom agent development and specific actions. I've used it successfully to build a SQL query generation agent that interacts with PostgreSQL.
 
@@ -89,7 +152,7 @@ Key aspects:
 - Customization becomes straightforward once core concepts are understood
 - Access the UI at `http://localhost:3001` after running the agent
 
-## AutoGen
+### AutoGen
 
 [AutoGen](https://microsoft.github.io/autogen/) offers a more streamlined approach:
 
@@ -111,7 +174,7 @@ Key aspects:
   - Docs say it is for research and development, not production
   - able to use LangChain tools
 
-## Tools Evaluated
+## Tools Used
 
 ### OpenLit
 
@@ -193,8 +256,6 @@ TODO: Explore filtering and labeling for better step/agent identification.
   - **Privacy Considerations**: Requires sending potentially sensitive data to LangChain’s servers.
 
 - **Access**: The UI is available at [smith.langchain.com](https://smith.langchain.com/), offering a centralized dashboard for trace analysis and evaluation.
-
-## Other Tools I Like
 
 ### Poetry
 

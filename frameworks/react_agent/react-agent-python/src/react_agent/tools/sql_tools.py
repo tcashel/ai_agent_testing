@@ -5,6 +5,14 @@ from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain_core.language_models import BaseLanguageModel
 from langchain_openai import ChatOpenAI
 import os
+import sys
+
+# Import shared environment utilities
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../../..')))
+from shared.utils.env import load_env
+
+# Load environment variables from both root and local .env files
+load_env()
 
 def create_sql_tools(db: SQLDatabase, llm: Optional[BaseLanguageModel] = None) -> List[Dict[str, Any]]:
     """Create SQL tools for the agent.
