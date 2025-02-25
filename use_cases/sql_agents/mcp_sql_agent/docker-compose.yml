@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    container_name: mcp-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/notebooks
+      - ./src:/home/jovyan/src
+      - ./config:/home/jovyan/config
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    env_file:
+      - ../../../../.env
+    networks:
+      - mcp-network
+    command: "start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''"
+
+  postgres:
+    image: postgres:14
+    container_name: mcp-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-testdb}
+    networks:
+      - mcp-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: mcp-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - mcp-network
+
+  # Model Context Protocol servers - one for each data source
+  mcp-postgres:
+    image: ghcr.io/modelcontextprotocol/mcp-postgresql:latest
+    container_name: mcp-server-postgres
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      - MCP_DATABASE_URI=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-testdb}
+      - MCP_PORT=8080
+    env_file:
+      - ../../../../.env
+    networks:
+      - mcp-network
+
+  mcp-snowflake:
+    image: ghcr.io/modelcontextprotocol/mcp-snowflake:latest
+    container_name: mcp-server-snowflake
+    ports:
+      - "8081:8080"
+    environment:
+      - MCP_PORT=8080
+      - SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}
+      - SNOWFLAKE_USER=${SNOWFLAKE_USER}
+      - SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
+      - SNOWFLAKE_DATABASE=${SNOWFLAKE_DATABASE}
+      - SNOWFLAKE_SCHEMA=${SNOWFLAKE_SCHEMA}
+      - SNOWFLAKE_WAREHOUSE=${SNOWFLAKE_WAREHOUSE}
+      - SNOWFLAKE_ROLE=${SNOWFLAKE_ROLE}
+    env_file:
+      - ../../../../.env
+    networks:
+      - mcp-network
+
+  mcp-grafana:
+    image: ghcr.io/modelcontextprotocol/mcp-generic:latest
+    container_name: mcp-server-grafana
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./config/mcp-grafana:/config
+    environment:
+      - MCP_PORT=8080
+      - GRAFANA_URL=http://grafana:3000
+      - GRAFANA_API_KEY=${GRAFANA_API_KEY}
+    env_file:
+      - ../../../../.env
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  grafana_data:

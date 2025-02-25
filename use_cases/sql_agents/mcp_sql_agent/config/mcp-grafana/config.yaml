@@ -1,0 +1,60 @@
+name: Grafana MCP Server
+description: MCP server for accessing Grafana metrics data
+
+endpoints:
+  - name: query_metrics
+    description: Query Grafana for metrics data using PromQL or Flux syntax
+    parameters:
+      - name: datasource
+        type: string
+        description: The name of the Grafana datasource to query (e.g., 'Prometheus', 'InfluxDB')
+      - name: query
+        type: string
+        description: The query string in the format required by the datasource
+      - name: start
+        type: string
+        description: Start time for the query (e.g., 'now-1h')
+      - name: end
+        type: string
+        description: End time for the query (e.g., 'now')
+      - name: step
+        type: integer
+        description: Step size for the query in seconds (e.g., 60 for minute intervals)
+        optional: true
+    response:
+      type: object
+      description: Metrics data from Grafana
+
+  - name: get_dashboards
+    description: Get list of available Grafana dashboards
+    parameters: []
+    response:
+      type: array
+      description: List of available Grafana dashboards
+
+  - name: get_dashboard_panels
+    description: Get panels within a Grafana dashboard
+    parameters:
+      - name: dashboard_uid
+        type: string
+        description: The UID of the dashboard
+    response:
+      type: array
+      description: List of panels in the dashboard
+
+  - name: query_dashboard_panel
+    description: Get data from a specific dashboard panel
+    parameters:
+      - name: dashboard_uid
+        type: string
+        description: The UID of the dashboard
+      - name: panel_id
+        type: integer
+        description: The ID of the panel
+      - name: time_range
+        type: string
+        description: Time range for the query (e.g., 'last_1_hour', 'last_24_hours')
+        optional: true
+    response:
+      type: object
+      description: Panel data from Grafana
