@@ -1,0 +1,94 @@
+# Cursor IDE Configuration for pyproject.toml Files
+
+This configuration provides guidelines for how Cursor.ai should handle Python projects using pyproject.toml files.
+
+## File Detection
+
+Detect and recognize the following files as part of Python project configuration:
+- `pyproject.toml`: Main project configuration file
+- `poetry.lock`: Lock file for dependency versions
+- `.env`: Environment variables
+- `.ruff.toml`: Ruff linter configuration (if separate from pyproject.toml)
+- `pytest.ini`: PyTest configuration (if not in pyproject.toml)
+
+## Configuration Sections
+
+When working with `pyproject.toml` files, recognize these common sections:
+
+```
+[build-system]          # Package build configuration
+[tool.poetry]           # Poetry project metadata
+[tool.poetry.dependencies]    # Regular dependencies
+[tool.poetry.group.*.dependencies]  # Group-specific dependencies
+[tool.poetry.scripts]   # CLI entry points
+[tool.ruff]             # Ruff linter configuration
+[tool.ruff.lint]        # Linting rules
+[tool.ruff.format]      # Formatting rules
+[tool.pyright]          # Type checking configuration
+[tool.pytest.ini_options]  # PyTest configuration
+[tool.poe.tasks]        # Task automation with poethepoet
+```
+
+## Autocompletion
+
+Provide intelligent autocompletion for:
+1. Package names and versions in dependency sections
+2. Python version specifiers (`>=3.10,<3.13`)
+3. Common Ruff rule codes (E, F, I, D, etc.)
+4. Pytest configuration options
+5. Common license identifiers (MIT, Apache-2.0, etc.)
+
+## Validation
+
+Apply the following validation rules:
+1. Enforce valid TOML syntax
+2. Validate dependency version specifiers
+3. Check for missing required fields in [tool.poetry] section
+4. Ensure Python version constraints are properly formatted
+5. Verify CLI entry points refer to valid module paths
+
+## Refactoring
+
+Support these refactoring operations:
+1. Upgrade dependency versions
+2. Move configuration from separate files into pyproject.toml
+3. Extract shared dependencies into a common group
+4. Sort dependencies alphabetically
+5. Add or remove linting rules
+
+## Documentation
+
+Show context-sensitive documentation for:
+1. Dependency specification formats (^1.0.0, ~1.0.0, etc.)
+2. Ruff rule codes on hover
+3. Available Poetry commands for scripts
+4. PyTest configuration options
+5. Version constraint patterns
+
+## Integration
+
+Integrate with the following tools:
+1. Poetry for dependency management
+2. Ruff for linting and formatting
+3. Pyright for type checking
+4. PyTest for testing
+5. Poethepoet for task running
+
+## Commands
+
+Enable the following commands in pyproject.toml files:
+1. `Add dependency` - Add a new dependency with version
+2. `Update dependency` - Update a dependency version
+3. `Add linting rule` - Add a new rule to [tool.ruff.lint]
+4. `Create task` - Add a new task to [tool.poe.tasks]
+5. `Convert to Poetry` - Convert a requirements.txt project to Poetry
+
+## Best Practices
+
+Enforce these best practices through suggestions:
+1. Use caret (^) versioning for most dependencies
+2. Group dev dependencies appropriately
+3. Specify Python version constraints explicitly
+4. Include license information
+5. Use consistent docstring style in configuration
+6. Define common development tasks

@@ -4,3 +4,6 @@
 [submodule "frameworks/llamaindex/llama-cookbook"]
 	path = frameworks/llamaindex/llama-cookbook
 	url = git@github.com:meta-llama/llama-cookbook.git
+[submodule "graphrag"]
+	path = graphrag
+	url = git@github.com:microsoft/graphrag.git
